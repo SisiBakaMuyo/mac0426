@@ -1,13 +1,22 @@
-MAC0426 | MAC5760 - Sistemas de Bancos de Dados
+# 🗄️ MAC0426 | MAC5760 - Sistemas de Bancos de Dados
 
-Professora Kelly Rosa Braghetto
+**Professora:** Kelly Rosa Braghetto
 
-Link para o Repositório com o Código dos Experimentos:
+---
 
-https://github.com/SQL-2026-Trabalho/ep1
+## 📚 Experimentos e Trabalhos
 
-https://github.com/SQL-2026-Trabalho/ep2
+Repositórios com o código dos experimentos realizados durante o curso:
 
-Link para o Vídeo de Apresentação do Ep1:
+- 🔗 [Experimento 1](https://github.com/SQL-2026-Trabalho/ep1)
+- 🔗 [Experimento 2](https://github.com/SQL-2026-Trabalho/ep2)
 
-https://www.youtube.com/watch?v=fnwWMcyy3Pw
+---
+
+## 🎥 Apresentações
+
+- 📹 [Vídeo de Apresentação - EP1](https://www.youtube.com/watch?v=fnwWMcyy3Pw)
+
+---
+
+*Repositório de atividades da disciplina MAC0426/MAC5760*
