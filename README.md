@@ -9,4 +9,5 @@ https://github.com/SQL-2026-Trabalho/ep1
 https://github.com/SQL-2026-Trabalho/ep2
 
 Link para o Vídeo de Apresentação do Ep1:
+
 https://www.youtube.com/watch?v=fnwWMcyy3Pw
