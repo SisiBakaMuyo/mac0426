@@ -1,0 +1,52 @@
+Entrar no wsl:
+
+wsl --install
+
+Mudara a cara do prompt pro Linux
+
+
+sudo service mysql start
+
+sudo service mysql status
+
+
+COnsultando se a base ta ok:
+
+mysql -u root -p
+
+Entra no prompt do mysql:
+
+USE StackOverflow;
+
+SHOW TABLES;
+
+exit
+
+Esta tudo ok, pra abrir o dir atual do wsl com os arquivos rpa transferencia:
+
+explorer.exe .
+
+Roda o script:
+
+python3 script.py
+
+
+
+
+
+-------------------------------------------------------------
+
+
+Para apagar a base e recriar ela nova:
+
+mysqladmin -u root -p drop StackOverflow
+
+
+Cria a base vazia:
+
+mysqladmin -u root -p create StackOverflow
+
+
+Popula a base:
+
+mysql -u root -p StackOverflow < mysql_script_criacao_bd.sql

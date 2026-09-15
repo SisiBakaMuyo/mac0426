@@ -1,0 +1,197 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{pan2023survey}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=eb04d1c1a53cad7f938614ea7de109a5}{%
+           family={Pan},
+           familyi={P\bibinitperiod},
+           given={James\bibnamedelima Jie},
+           giveni={J\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ebbba2f353e9b7182274b65988d6f9e6}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Jianguo},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=82ebafd2e144bf050f398481d670d071}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Guoliang},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{8ea66a7f64fbf50ddba53abb39fb9a16}
+      \strng{fullhash}{8ea66a7f64fbf50ddba53abb39fb9a16}
+      \strng{bibnamehash}{8ea66a7f64fbf50ddba53abb39fb9a16}
+      \strng{authorbibnamehash}{8ea66a7f64fbf50ddba53abb39fb9a16}
+      \strng{authornamehash}{8ea66a7f64fbf50ddba53abb39fb9a16}
+      \strng{authorfullhash}{8ea66a7f64fbf50ddba53abb39fb9a16}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2310.14021}
+      \field{title}{Survey of Vector Database Management Systems}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2310.14021
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2310.14021
+      \endverb
+    \endentry
+    \entry{wang2021milvus}{inproceedings}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{10}{}{%
+        {{un=0,uniquepart=base,hash=ebbba2f353e9b7182274b65988d6f9e6}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Jianguo},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b0200c63efc538e115b3a6e59f5c9138}{%
+           family={Yi},
+           familyi={Y\bibinitperiod},
+           given={Xiaomeng},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=caee35c3f4ad1665b2dee14b4bd9b602}{%
+           family={Guo},
+           familyi={G\bibinitperiod},
+           given={Rentong},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=cd3da7edb75e9939330584c49f67cd61}{%
+           family={Eng},
+           familyi={E\bibinitperiod},
+           given={Albert},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=47cfec4e5df778268eb04edac46a6ea2}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Shihao},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5370ae3f90eadd2ee26d37485de4bddd}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Hai},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=fe3aaf47c69d671a37fe19b7e22abd84}{%
+           family={Xiang},
+           familyi={X\bibinitperiod},
+           given={Chuanxiang},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4a94d75e70dbd75641b77002fac1570c}{%
+           family={Zeng},
+           familyi={Z\bibinitperiod},
+           given={Xiaofan},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5d70524bcb31f744271b071b43d9e9ee}{%
+           family={Shun},
+           familyi={S\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8c37f65d8cce665a96729110a4e37cba}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Jiazhi},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d10969ac908ccedbd72a2cfaabc57b28}
+      \strng{fullhash}{da30c133f7adbe62a5f3d71ed9db7ddc}
+      \strng{bibnamehash}{d10969ac908ccedbd72a2cfaabc57b28}
+      \strng{authorbibnamehash}{d10969ac908ccedbd72a2cfaabc57b28}
+      \strng{authornamehash}{d10969ac908ccedbd72a2cfaabc57b28}
+      \strng{authorfullhash}{da30c133f7adbe62a5f3d71ed9db7ddc}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2021 International Conference on Management of Data}
+      \field{title}{Milvus: A Purpose-Built Vector Data Management System}
+      \field{year}{2021}
+      \field{pages}{2614\bibrangedash 2627}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1145/3448016.3457550
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3448016.3457550
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3448016.3457550
+      \endverb
+    \endentry
+    \entry{zhan2025bigvectorbench}{article}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=01ed864b4ee56ef890af7e4464e1e44e}{%
+           family={Zhan},
+           familyi={Z\bibinitperiod},
+           given={Guang},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=53a22c1a37bcd080f159173463a6a7c8}{%
+           family={Kang},
+           familyi={K\bibinitperiod},
+           given={Gao},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{1180a64ca06e44326b82487f0bec8c8b}
+      \strng{fullhash}{1180a64ca06e44326b82487f0bec8c8b}
+      \strng{bibnamehash}{1180a64ca06e44326b82487f0bec8c8b}
+      \strng{authorbibnamehash}{1180a64ca06e44326b82487f0bec8c8b}
+      \strng{authornamehash}{1180a64ca06e44326b82487f0bec8c8b}
+      \strng{authorfullhash}{1180a64ca06e44326b82487f0bec8c8b}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the VLDB Endowment}
+      \field{number}{5}
+      \field{title}{BigVectorBench: Heterogeneous Data Embedding and Compound Queries are Essential in Evaluating Vector Databases}
+      \field{volume}{18}
+      \field{year}{2025}
+      \field{pages}{1120\bibrangedash 1133}
+      \range{pages}{14}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

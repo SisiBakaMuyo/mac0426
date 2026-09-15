@@ -1,0 +1,204 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[backend=biber, style=abnt]{biblatex}
+\addbibresource{lib_parte3.bib}
+
+\title{\textbf{EP2 de Bancos de Dados -- Parte 3: Estado da Arte}}
+\author{\small\textit{Enzo Furegatti Spinella -- 14568198}}
+\date{11 de julho de 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Estado da Arte}
+\label{sec:estado_da_arte}
+
+De acordo com \textcite{pan2023survey}, atualmente, existem mais de 20 \textit{database vector systems} no mercado. Vamos focar nos mais modernos e usados atualmente no mercado e no ambiente científico.
+
+\section{Pinecone}
+\label{sec:pinecone}
+
+A evolução recente dos \textit{Vector Database Management Systems} é marcada pela transição de índices mantidos estritamente em memória para arquiteturas nativas em nuvem e sem servidor. Neste cenário, o Pinecone destaca-se, projetado especificamente para suprir as demandas de latência e consistência de aplicações baseadas em LLMs e RAG \cite{zhan2025bigvectorbench}.
+
+O Pinecone, diferente dos próximos que serão apresentados, é de código fechado e é um SaaS (\textit{Software as a Service}), isto é, o usuário não se preocupa em gerenciar o sistema, a escalabilidade, nem a infraestrutura. Porém, isso vem com um alto custo monetário e o usuário fica preso ao sistema de nuvem do Pinecone.
+
+\subsection{Arquitetura Desacoplada e Armazenamento}
+O sistema de armazenamento utiliza estruturas de arquivos imutáveis persistidos em serviços de armazenamento de objetos distribuídos. A execução de consultas é delegada a executores, permitindo a auto-escalabilidade horizontal e independente do \textit{throughput} de leitura (QPS) e do volume total de vetores armazenados, mitigando os custos operacionais de infraestrutura em escala de bilhões de vetores.
+
+\subsection{Busca Híbrida e Filtragem de Metadados em Etapa Única}
+Um dos principais gargalos teóricos em \textit{Vector Database Management Systems} é a eficiência em buscas vetoriais restritas por atributos escalares (filtros de metadados). As abordagens tradicionais dividem-se em:
+
+\begin{enumerate}
+    \item \textbf{Pré-filtragem:} Reduz o espaço de busca aplicando o filtro escalar antes da navegação no grafo ANN, o que frequentemente fragmenta a topologia do grafo e degrada o retorno dos dados.
+    \item \textbf{Pós-filtragem:} Executa a busca vetorial no grafo completo e descarta os resultados que não satisfazem o filtro escalar, resultando em latência desproporcional e retrabalho computacional caso a seletividade do filtro seja alta.
+\end{enumerate}
+
+O Pinecone resolve esta limitação através do mecanismo de \textit{Filtragem em Etapa Única}, onde índices invertidos e vetores de bits de metadados são integrados diretamente ao processo de travessia do algoritmo de Vizinhos Mais Próximos Aproximados (ANN). Esse fluxo unificado garante latência determinística $\mathcal{O}(\log N)$ mesmo em cenários com filtros altamente seletivos e combinados com representações esparsas e densas simultaneamente.
+
+\section{Milvus}
+\label{sec:milvus}
+
+Diferentemente do Pinecone, o Milvus é um sistema gerenciador de código aberto, amplamente estudado e usado no meio científico e empresarial.
+
+\subsection{Desacoplamento de Atores e Ciclo de Vida dos Dados}
+A inovação estrutural do Milvus reside na separação estrita entre computação, armazenamento e fluxo de mensagens de log. O sistema divide suas operações em três camadas independentes:
+
+\begin{enumerate}
+    \item \textbf{Camada de Coordenação:} Funciona como o cérebro do \textit{cluster}, gerenciando a atribuição de nós, topologia da rede, balanceamento de carga e metadados do sistema através de um motor de consenso distribuído.
+    \item \textbf{Camada de Execução:} Composta por nós trabalhadores especializados e \textit{stateless}. Subdivide-se em \textit{Query Nodes}, exclusivos para computação de consultas ANN, \textit{Data Nodes}, responsáveis pelo consumo de logs e persistência, e \textit{Index Nodes}, dedicados à construção assíncrona de índices vetoriais pesados.
+    \item \textbf{Camada de Mensageria e Armazenamento:} Utiliza corretores de mensagens, como Apache Pulsar ou Kafka, para garantir a persistência de logs de escrita (\textit{Write-Ahead Logging} -- WAL) antes que os dados sejam armazenados em sistemas como Amazon S3.
+\end{enumerate}
+
+\subsubsection{Consistência Dinâmica e Segmentação de Dados Semânticos}
+Diferente dos bancos relacionais ACID clássicos, o Milvus permite ao usuário parametrizar o nível de consistência em tempo de execução, variando desde a consistência forte até a consistência eventual \cite{wang2021milvus}. Para processar o fluxo contínuo de dados, o sistema introduz os conceitos de dados \textit{Bounded} (segmentos fechados e indexados) e \textit{Unbounded} (dados recém-inseridos que residem em buffers de memória).
+
+Durante uma consulta, o Milvus executa uma busca paralela híbrida envolvendo o conjunto de vetores já consolidados em índices estruturados e os vetores em estado de \textit{stream} ainda não indexados. A operação de busca de vizinhos mais próximos é formalizada como a união dos resultados computados sobre ambas as partições de memória, onde o KNN executa uma busca exaustiva de força bruta via força computacional paralela, usando núcleos CUDA em GPUs, se disponíveis. Isso garante que dados recém-inseridos fiquem disponíveis para consulta em milissegundos sem interromper a estabilidade dos índices globais de larga escala \cite{wang2021milvus}.
+
+\section{pgvector}
+\label{sec:pgvector}
+
+Diferentemente do Milvus e do Pinecone, o \textit{pgvector} não foi construído do zero como um sistema puramente vetorial, mas sim como uma extensão do Postgres. Dessa forma, transformou o PostgreSQL em um banco de dados que suporta armazenamento híbrido vetorial e relacional.
+
+\subsection{Mecanismos de Funcionamento e Indexação}
+A extensão introduziu o tipo nativo \texttt{vector} e operadores geométricos fundamentais para calcular a distância entre um vetor de consulta $\vec{q}$ e um vetor armazenado $\vec{x}$. É utilizado o cálculo de distância simples já mencionado anteriormente, como a distância euclidiana e a similaridade de cossenos.
+
+\subsection{Algoritmos de Indexação Suportados}
+Para mitigar a complexidade exaustiva $\mathcal{O}(N)$, o \textit{pgvector} implementa dois algoritmos principais de Busca por Vizinhos Próximos Aproximados (\textit{Approximate Nearest Neighbor Search} -- ANNS):
+
+\begin{enumerate}
+    \item \textbf{IVFFlat:} Executa a clusterização do espaço vetorial através de \textit{k-means} criando listas invertidas. Possui baixo consumo de memória e rápida construção, mas menor precisão se o número de partições examinadas for pequeno.
+    \item \textbf{HNSW:} Constrói um grafo hierárquico estruturado de múltiplos níveis. Possui uma ótima precisão e um ótimo tempo, embora demande maior processamento e memória RAM para a construção e manutenção do índice.
+\end{enumerate}
+
+\subsection{Vantagens}
+\begin{itemize}
+    \item \textbf{Consistência ACID Completa:} O vetor e os dados transacionais residem no mesmo bloco de dados, garantindo atomicidade absoluta via logs de escrita antecipada (WAL).
+    \item \textbf{Filtragem Híbrida Eficiente:} O otimizador de consultas do PostgreSQL avalia estatísticas estruturadas e índices vetoriais no mesmo plano de execução, permitindo instruções SQL complexas.
+\end{itemize}
+
+\subsection{Limitações Estruturais do pgvector}
+Apesar de sua enorme conveniência, a arquitetura baseada em extensão impõe gargalos físicos rígidos que impedem o \textit{pgvector} de substituir sistemas massivamente distribuídos (como o Milvus) em cenários de hiperescala.
+
+\subsubsection{Gargalos e Restrições Técnicas}
+\begin{enumerate}
+    \item \textbf{Limite de Dimensões:} Restringe o número de dimensões do \textit{embedding} para 2.000, impedindo o uso de modelos científicos pesados de última geração sem a aplicação de técnicas de compressão.
+    \item \textbf{Dependência de CPU:} Depende inteiramente de instruções SIMD de CPU. Sistemas como o Milvus utilizam paralelismo massivo em GPU (Nvidia CUDA), operando ordens de magnitude acima do rendimento suportado pelo PostgreSQL em grandes volumes.
+    \item \textbf{Acoplamento de Recursos:} Como o PostgreSQL opera em uma arquitetura baseada em processos estruturados para CPUs, cálculos vetoriais intensivos competem diretamente por CPU e memória RAM com transações críticas de leitura/escrita. Um pico de buscas semânticas pode exaurir os recursos e degradar a aplicação principal.
+\end{enumerate}
+
+\section{Qdrant}
+\label{sec:qdrant}
+
+O Qdrant é um banco de dados de vetores projetado para buscas de vizinhos mais próximos estruturadas (ANN) com suporte nativo a filtragem de metadados. Desenvolvido em Rust, seu diferencial reside na eficiência de memória e na execução de filtros em estágio único.
+
+\subsection{Estrutura de Dados Básica}
+No Qdrant, a unidade fundamental de armazenamento é um ponto. Matematicamente, um ponto $P$ é definido como uma tupla:
+\begin{equation}
+P = (\text{id}, \vec{v}, \text{payload})
+\end{equation}
+Onde:
+\begin{itemize}
+    \item $\text{id} \in \mathbb{N}$ ou UUID é o identificador único do ponto.
+    \item $\vec{v} \in \mathbb{R}^{d}$ é o vetor de alta dimensão ($d$). O Qdrant também suporta múltiplos vetores nomeados por ponto: $\vec{v}_{1}, \vec{v}_{2}, \dots, \vec{v}_{n}$.
+    \item \texttt{payload} é um objeto JSON que armazena os metadados associados (ex: marcas, preços, strings).
+\end{itemize}
+
+\subsection{Métricas de Distância}
+Para determinar a similaridade entre o vetor de busca $\vec{q}$ e um vetor armazenado $\vec{v}$, o Qdrant calcula a distância matemática baseada na métrica escolhida na criação da coleção, como similaridade de cossenos, distância euclidiana, entre outros.
+
+\subsection{O Índice de Busca: HNSW}
+Para evitar a busca linear $\mathcal{O}(N)$, o Qdrant utiliza uma variação do algoritmo HNSW (\textit{Hierarchical Navigable Small World}). O HNSW constrói uma estrutura de grafos em múltiplas camadas:
+\begin{enumerate}
+    \item A \textbf{Camada Superior} ($L_{m}$) possui poucos nós e conexões longas para buscas rápidas e grosseiras.
+    \item À medida que se desce nas camadas ($L_{m-1} \dots L_{0}$), o grafo se torna mais denso, permitindo o refinamento da busca até encontrar os vizinhos mais próximos na camada $L_{0}$, que contém todos os vetores.
+\end{enumerate}
+
+\subsection{Filtragem em Estágio Único}
+O maior diferencial do Qdrant é como ele une a busca vetorial com os filtros de \textit{payload}. Em vez de filtrar antes ou depois da busca vetorial, o Qdrant faz a filtragem dinâmica durante a travessia do grafo HNSW.
+
+Dada uma condição de filtro definida pelo usuário (por exemplo: \texttt{preco < 50}), durante a busca no grafo, ao avaliar se deve avançar para um nó vizinho $V_{j}$, o algoritmo valida se o \textit{payload} de $V_{j}$ satisfaz a condição do usuário. Se o nó não satisfizer a condição, a aresta é ignorada no cálculo de proximidade vetorial, garantindo que o resultado final seja matematicamente preciso e respeite estritamente as regras de negócio sem perder performance.
+
+\subsection{Otimização de Memória: Quantização}
+Para mitigar o alto consumo de RAM, o Qdrant implementa a Quantização Escalar. Ela converte os valores de ponto flutuante de 32 bits para inteiros de 8 bits, técnica similar à empregada em modelos de \textit{Deep Learning}. Isso reduz o tamanho do índice em até 4x, permitindo que bilhões de dimensões sejam processadas com eficiência de \textit{cache} de CPU e consumo de memória drasticamente menor.
+
+\section{Análise Comparativa}
+\label{sec:analise_comparativa}
+
+A tabelas a seguir apresentam uma consolidação visual e técnica dos principais sistemas gerenciadores de bancos de dados vetoriais analisados neste relatório.
+
+\begin{table}[H]
+\centering
+\caption{Comparativo: Linguagem Base e Algoritmos de Indexação}
+\begin{tabularx}{\textwidth}{l l X}
+\toprule
+\textbf{Sistema} & \textbf{Linguagem Base} & \textbf{Algoritmos de Indexação Suportados} \\
+\midrule
+Pinecone & Go / C++ & Proprietário (Estrutura de Grafo / ANN). \\
+Milvus & Go / C++ / Python & HNSW, IVF, ScaNN, ANNOY. \\
+pgvector & C (Extensão Postgres) & HNSW, IVFFlat. \\
+Qdrant & Rust & HNSW customizado. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Comparativo: Suporte a Busca Híbrida e Tipo de Licença}
+\begin{tabularx}{\textwidth}{l X l}
+\toprule
+\textbf{Sistema} & \textbf{Busca Híbrida (Vetor + Metadados)} & \textbf{Tipo de Licença} \\
+\midrule
+Pinecone & Filtragem em Etapa Única nativa com vetores de bits. & Proprietária (SaaS) \\
+Milvus & Filtragem dinâmica paralela sobre dados indexados e em stream. & Open Source \\
+pgvector & Filtros relacionais e vetoriais integrados no otimizador SQL. & Open Source \\
+Qdrant & Filtragem dinâmica em estágio único durante a travessia do grafo. & Open Source \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Comparativo: Modelo de Escalabilidade}
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Sistema} & \textbf{Modelo de Escalabilidade} \\
+\midrule
+Pinecone & Nuvem nativa, totalmente desacoplada e sem servidor (Serverless), focada em auto-escalabilidade horizontal. \\
+Milvus & Altamente distribuído com separação estrita de três camadas independentes (Coordenação, Execução e Mensageria). \\
+pgvector & Essencialmente vertical, operando acoplado diretamente aos recursos físicos e processos de CPU/RAM da instância PostgreSQL. \\
+Qdrant & Escalabilidade horizontal nativa através de um sistema robusto e eficiente de sharding construído em Rust. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Comparativo: Vantagens e Desvantagens dos Sistemas}
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Sistema} & \textbf{Vantagens} & \textbf{Desvantagens} \\
+\midrule
+Pinecone & Totalmente gerenciado (SaaS); infraestrutura e escalabilidade transparentes; excelente para RAG com filtragem em etapa única nativa. & Código fechado (proprietário); alto custo financeiro em larga escala; dependência total do ecossistema de nuvem do provedor (vendor lock-in). \\
+\midrule
+Milvus & Código aberto; altamente distribuído e robusto; permite consistência dinâmica e paralelismo massivo utilizando hardware focado (GPUs/CUDA). & Arquitetura complexa com muitas partes móveis (três camadas distintas); curva de aprendizado e manutenção de infraestrutura elevadas. \\
+\midrule
+pgvector & Consistência ACID completa; integração nativa com dados relacionais existentes no PostgreSQL; sem necessidade de gerenciar um novo banco de dados. & Limite físico de 2.000 dimensões; dependência estrita de CPU (sem aceleração por GPU); cálculos vetoriais intensivos competem por recursos com transações SQL críticas. \\
+\midrule
+Qdrant & Desenvolvido em Rust (alta eficiência de memória); filtragem dinâmica em estágio único durante a travessia do grafo HNSW; quantização escalar nativa. & Comunidade e ecossistema de ferramentas integradas ligeiramente menores quando comparados ao Milvus ou soluções de mercado mais antigas. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\printbibliography
+
+\end{document}
